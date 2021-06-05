@@ -1,2 +1,2 @@
 # BlurView
-A very fast and dynamic IOS-like blur of underlying Views for Android
+A very fast and dynamic IOS-like blur layout for Android
