@@ -11,4 +11,7 @@ https://github.com/medivh397/BlurView/blob/main/demo1.mp4
 
 </center>
 
+## How to use
+...
+
 
