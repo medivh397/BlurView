@@ -175,7 +175,7 @@ public class BlurLayout extends FrameLayout {
         }
     };
 
-    //todo resumeRender, pauseRender 
+    //todo resumeRender, pauseRender
 
     @Override
     protected void onDetachedFromWindow() {
