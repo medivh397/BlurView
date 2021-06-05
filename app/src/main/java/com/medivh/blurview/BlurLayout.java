@@ -87,7 +87,7 @@ public class BlurLayout extends FrameLayout {
     @Override
     protected void dispatchDraw(Canvas c) {
         if (canvasDrawLock) {
-            Log.i("BlurLayout", "drawLock return");
+//            Log.i("BlurLayout", "drawLock return");
             return;
         }
         updateBackground();
@@ -140,7 +140,7 @@ public class BlurLayout extends FrameLayout {
             if (!isPauseBlurRunnablePost) {
                 isPauseBlurRunnablePost = true;
                 //暂停surfaceView的更新
-                getHandler().postDelayed(pauseBlurRunnable, 1000);
+                getHandler().postDelayed(pauseBlurRunnable, 300);
             }
 
         }

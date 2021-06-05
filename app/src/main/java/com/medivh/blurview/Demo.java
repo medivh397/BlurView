@@ -82,7 +82,7 @@ public class Demo extends AppCompatActivity {
     int position;
 
     public void demo1(View view) {
-        position = position == 0 ? 2 : 2 + new Random().nextInt(6);
+        position = position == 0 ? 2 : 2 + new Random().nextInt(4);
         recyclerView.smoothScrollToPosition(position);
     }
 

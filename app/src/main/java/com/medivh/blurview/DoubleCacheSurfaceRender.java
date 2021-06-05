@@ -3,7 +3,6 @@ package com.medivh.blurview;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -20,16 +19,20 @@ import java.util.concurrent.locks.ReentrantLock;
 public class DoubleCacheSurfaceRender extends SurfaceRender {
 
     private final Deque<Bitmap> bufferQueue = new LinkedList<>();
-    private final ReentrantLock reentrantLock = new ReentrantLock();
+    private final ReentrantLock queueLock = new ReentrantLock();
+    private final Object renderThreadLock = new Object();
+
+    private Thread renderThread;
 
     private boolean stopThread = false;
+    private boolean isRenderIdle = true;
 
     public DoubleCacheSurfaceRender(Context context) {
         this.context = context;
         init();
     }
 
-    private void init (){
+    private void init() {
         HandlerThread blurThread = new HandlerThread("BlurThread");
         blurThread.start();
 
@@ -45,19 +48,30 @@ public class DoubleCacheSurfaceRender extends SurfaceRender {
 
                 Bitmap copy = Bitmap.createBitmap(background);
                 Bitmap blurBackground = BlurUtil.blurBitmap(context, copy, BlurLayout.BLUR_RADIUS);
-                Log.i("BlurLayout", "cost:" + (System.currentTimeMillis() - begin) +"  blur bitmap");
+                Log.i("BlurLayout", "cost:" + (System.currentTimeMillis() - begin) + "  blur bitmap");
 
-                reentrantLock.lock();
+                queueLock.lock();
                 if (bufferQueue.size() > 1) {
                     bufferQueue.removeFirst();
                 }
+
                 bufferQueue.offer(blurBackground);
-                reentrantLock.unlock();
+                Log.i("BlurLayout", "bufferQueue size:" + bufferQueue.size());
+
+                queueLock.unlock();
+
+                if (isRenderIdle) {
+                    synchronized (renderThreadLock) {
+                        isRenderIdle = false;
+                        renderThreadLock.notify();
+                    }
+                }
 
                 copy.recycle();
             }
         };
     }
+
     @Override
     public void surfaceCreated(@NonNull final SurfaceHolder holder) {
         super.surfaceCreated(holder);
@@ -66,9 +80,9 @@ public class DoubleCacheSurfaceRender extends SurfaceRender {
     @Override
     void drawFrame(final SurfaceHolder holder) {
 
-        final Paint paint = new Paint();
+        renderThread = new Thread(new Runnable() {
+            final Paint paint = new Paint();
 
-        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 Bitmap blurBackground;
@@ -78,17 +92,22 @@ public class DoubleCacheSurfaceRender extends SurfaceRender {
                     }
                     if (bufferQueue.size() == 0) {
                         try {
-                            Thread.sleep(1);
+                            synchronized (renderThreadLock) {
+                                isRenderIdle = true;
+                                Log.i("BlurLayout", "renderThreadLock.wait");
+                                renderThreadLock.wait();
+                            }
+
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        continue;
                     }
+
                     long begin = System.currentTimeMillis();
 
-                    reentrantLock.lock();
+                    queueLock.lock();
                     blurBackground = bufferQueue.poll();
-                    reentrantLock.unlock();
+                    queueLock.unlock();
 
                     if (blurBackground == null) {
                         continue;
@@ -109,8 +128,8 @@ public class DoubleCacheSurfaceRender extends SurfaceRender {
             }
         });
 
-        thread.setPriority(Thread.MAX_PRIORITY);
-        thread.start();
+        renderThread.setPriority(Thread.MAX_PRIORITY);
+        renderThread.start();
 
     }
 
