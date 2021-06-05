@@ -2,7 +2,7 @@
 
 A very fast and dynamic blur layout for Android
 
-Here is the app demo:
+Here is the demo video:
 https://github.com/medivh397/BlurView/blob/main/demo1.mp4
 <br/><br/>
 <center class = "half">
