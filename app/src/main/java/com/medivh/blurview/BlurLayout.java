@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -41,6 +40,7 @@ public class BlurLayout extends FrameLayout {
 
     private boolean canvasDrawLock;
     private boolean preDrawLock;
+    private boolean isPauseBlurRunnablePost;
 
     public BlurLayout(@NonNull Context context) {
         this(context, null);
@@ -51,11 +51,7 @@ public class BlurLayout extends FrameLayout {
     }
 
     public BlurLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
-    }
-
-    public BlurLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        super(context, attrs, defStyleAttr);
         init(context);
     }
 
@@ -141,7 +137,8 @@ public class BlurLayout extends FrameLayout {
             setAlpha(1);
             canvasDrawLock = false;
 
-            if (!getHandler().hasCallbacks(pauseBlurRunnable)) {
+            if (!isPauseBlurRunnablePost) {
+                isPauseBlurRunnablePost = true;
                 //暂停surfaceView的更新
                 getHandler().postDelayed(pauseBlurRunnable, 1000);
             }
@@ -173,7 +170,8 @@ public class BlurLayout extends FrameLayout {
         @Override
         public void run() {
             preDrawLock = true;
-            Log.i("BlurLayout", "updateLock ====!!");
+            isPauseBlurRunnablePost = false;
+            Log.i("BlurLayout", "pauseBlur");
         }
     };
 

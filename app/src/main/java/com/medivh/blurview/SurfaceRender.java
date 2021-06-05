@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.view.SurfaceHolder;
@@ -42,18 +43,15 @@ public abstract class SurfaceRender implements SurfaceHolder.Callback {
     }
 
     Canvas lockCanvas() {
-        Canvas canvas = null;
+        Canvas canvas;
         if (holder == null) {
             return null;
         }
-        try {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             canvas = holder.lockHardwareCanvas();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (canvas == null) {
-                canvas = holder.lockCanvas();
-            }
+        }else{
+            canvas = holder.lockCanvas();
         }
         return canvas;
     }
