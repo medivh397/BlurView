@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.3"
     defaultConfig {
         applicationId "com.medivh.blurview"
-        minSdkVersion 29
+        minSdkVersion 20
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -14,25 +14,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        release {
-            keyAlias 'medivh'
-            keyPassword 'xiaoqin'
-            storeFile file('./TestKeystore')
-            storePassword 'xiaoqin'
-            v1SigningEnabled true
-            v2SigningEnabled false
-        }
-    }
-
     buildTypes {
         release {
             minifyEnabled false
-            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
-
     }
 
 
@@ -47,6 +33,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
-    implementation "com.github.bumptech.glide:glide:4.8.0"
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 }
