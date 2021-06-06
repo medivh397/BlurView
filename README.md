@@ -12,7 +12,7 @@ https://github.com/medivh397/BlurView/blob/main/demo1.mp4
 </center>
 
 ## How to use
-All you need to do is put the BlurLayout into your layout files. You can use it as the view container, just like FrameLayout, LinearLayout...
+All you need to do is put the BlurLayout into your layout files. BlurLayout is a view container, just like a FrameLayout...
 
 ```xml
   <com.medivh.blurview.core.BlurLayout
