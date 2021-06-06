@@ -16,6 +16,8 @@ public abstract class SurfaceRender implements SurfaceHolder.Callback {
     Context context;
     Handler blurHandler;
 
+    BlurRenderScript blurRenderScript = new BlurRenderScript();
+
     int surfaceWidth;
     int surfaceHeight;
     Rect dst;

@@ -40,7 +40,7 @@ public class SimpleSurfaceRender extends SurfaceRender {
                 Canvas canvas = lockCanvas();
                 if (canvas != null) {
                     Bitmap copy = Bitmap.createBitmap(background);
-                    Bitmap blurBackground = BlurUtil.blurBitmap(context, copy, BlurLayout.BLUR_RADIUS);
+                    Bitmap blurBackground = blurRenderScript.blurBitmap(context, copy, BlurLayout.BLUR_RADIUS);
                     canvas.drawBitmap(blurBackground, null, dst, paint);
 
                     blurBackground.recycle();

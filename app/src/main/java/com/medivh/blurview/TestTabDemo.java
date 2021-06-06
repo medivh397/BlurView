@@ -10,14 +10,14 @@ import android.widget.LinearLayout;
 
 import com.medivh.blurview.core.BlurLayout;
 
-public class TabActivity extends AppCompatActivity {
+public class TestTabDemo extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tab);
+        setContentView(R.layout.activity_tab_demo);
 
         BlurLayout blurLayout = findViewById(R.id.blurLayout);
         blurLayout.setCoverColor(Color.parseColor("#ddffffff"));

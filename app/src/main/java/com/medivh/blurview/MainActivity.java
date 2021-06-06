@@ -10,12 +10,12 @@ import android.view.View;
 
 import com.medivh.blurview.core.BlurLayout;
 
-public class DemoActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private BlurLayout blurLayout;
-    int lastPosition;
-    boolean reverse;
+    private int lastPosition;
+    private boolean reverse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +36,8 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     public void demo2(View view) {
-        float dp200 = getResources().getDimension(R.dimen.dp200);
-        ObjectAnimator animator = ObjectAnimator.ofFloat(blurLayout, View.TRANSLATION_Y, blurLayout.getTranslationY(), blurLayout.getTranslationY() + (reverse ? -dp200 : dp200));
+        float distance = getResources().getDimension(R.dimen.dp200);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(blurLayout, View.TRANSLATION_Y, blurLayout.getTranslationY(), blurLayout.getTranslationY() + (reverse ? -distance : distance));
         reverse = !reverse;
         animator.setDuration(500);
         animator.start();
@@ -45,8 +45,13 @@ public class DemoActivity extends AppCompatActivity {
 
     public void demo3(View view) {
         Intent intent = new Intent();
-        intent.setClass(this, TabActivity.class);
+        intent.setClass(this, TestTabDemo.class);
         startActivity(intent);
     }
 
+    public void demo4(View view) {
+        Intent intent = new Intent();
+        intent.setClass(this, TestFragmentDemo.class);
+        startActivity(intent);
+    }
 }

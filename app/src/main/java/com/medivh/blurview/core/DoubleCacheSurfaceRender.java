@@ -48,12 +48,12 @@ public class DoubleCacheSurfaceRender extends SurfaceRender {
                 }
 
                 Bitmap copy = Bitmap.createBitmap(background);
-                Bitmap blurBackground = BlurUtil.blurBitmap(context, copy, BlurLayout.BLUR_RADIUS);
+                Bitmap blurBackground = blurRenderScript.blurBitmap(context, copy, BlurLayout.BLUR_RADIUS);
                 Log.i("BlurLayout", "cost:" + (System.currentTimeMillis() - begin) + "  blur bitmap");
 
                 queueLock.lock();
                 if (bufferQueue.size() > 1) {
-                    bufferQueue.removeFirst();
+                    bufferQueue.removeFirst().recycle();
                 }
 
                 bufferQueue.offer(blurBackground);
@@ -86,7 +86,6 @@ public class DoubleCacheSurfaceRender extends SurfaceRender {
 
             @Override
             public void run() {
-                Bitmap blurBackground;
                 while (true) {
                     if (stopThread) {
                         return;
@@ -107,7 +106,7 @@ public class DoubleCacheSurfaceRender extends SurfaceRender {
                     long begin = System.currentTimeMillis();
 
                     queueLock.lock();
-                    blurBackground = bufferQueue.poll();
+                    Bitmap blurBackground = bufferQueue.poll();
                     queueLock.unlock();
 
                     if (blurBackground == null) {

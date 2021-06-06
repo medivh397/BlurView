@@ -9,15 +9,15 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 
-public class BlurUtil {
+public class BlurRenderScript {
 
-    private static RenderScript rs;
-    private static ScriptIntrinsicBlur blurScript;
+    private RenderScript rs;
+    private ScriptIntrinsicBlur blurScript;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public static Bitmap blurBitmap(Context context, Bitmap inputBitmap, float blurRadius) {
+    public Bitmap blurBitmap(Context context, Bitmap inputBitmap, float blurRadius) {
         Bitmap outputBitmap = Bitmap.createBitmap(inputBitmap);
-        if(rs == null || blurScript == null){
+        if (rs == null || blurScript == null) {
             rs = RenderScript.create(context);
             blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
         }

@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -56,38 +58,37 @@ public class BlurLayout extends FrameLayout {
         surfaceRender = new DoubleCacheSurfaceRender(context);
         surfaceView.getHolder().addCallback(surfaceRender);
 
-        //todo not remove
-        getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                Log.i("BlurLayout", "onPreDraw");
-                if (preDrawLock) {
-                    preDrawLock = false;
-                } else {
-                    updateBackground();
-                }
-                return true;
-            }
-        });
+        getViewTreeObserver().addOnPreDrawListener(preDrawListener);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         surfaceView.setLayoutParams(lp);
         addView(surfaceView, 0);
 
     }
 
+    private final ViewTreeObserver.OnPreDrawListener preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
+        @Override
+        public boolean onPreDraw() {
+            Log.i("BlurLayout", "onPreDraw");
+            if (preDrawLock) {
+                preDrawLock = false;
+            } else {
+                prepareBitmapAndPost();
+            }
+            return true;
+        }
+    };
 
     @Override
     protected void dispatchDraw(Canvas c) {
         if (canvasDrawLock) {
             return;
         }
-        updateBackground();
+        prepareBitmapAndPost();
         super.dispatchDraw(c);
     }
 
 
-
-    private void updateBackground() {
+    private void prepareBitmapAndPost() {
 
         long begin = System.currentTimeMillis();
         int surfaceWidth = surfaceView.getWidth();
@@ -111,8 +112,10 @@ public class BlurLayout extends FrameLayout {
             canvasDrawLock = true;
             surfaceMatrix.reset();
             surfaceMatrix.preScale(SURFACE_VIEW_BITMAP_SCALE, SURFACE_VIEW_BITMAP_SCALE);
-            surfaceMatrix.postTranslate(0, -(getTop() + getTranslationY()) * SURFACE_VIEW_BITMAP_SCALE);
+            surfaceMatrix.postTranslate(-(getLeft() + getTranslationX()) * SURFACE_VIEW_BITMAP_SCALE,
+                    -(getTop() + getTranslationY()) * SURFACE_VIEW_BITMAP_SCALE);
             surfaceViewCanvas.setMatrix(surfaceMatrix);
+            surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
             setAlpha(0f);
             activityView.draw(surfaceViewCanvas);
@@ -146,6 +149,9 @@ public class BlurLayout extends FrameLayout {
         super.onDetachedFromWindow();
         if (surfaceRender != null) {
             surfaceRender.release();
+        }
+        if(preDrawListener != null){
+            getViewTreeObserver().removeOnPreDrawListener(preDrawListener);
         }
         Log.i("BlurLayout", "onDetachedFromWindow");
     }
