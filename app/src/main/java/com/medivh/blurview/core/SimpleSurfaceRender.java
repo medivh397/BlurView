@@ -1,4 +1,4 @@
-package com.medivh.blurview;
+package com.medivh.blurview.core;
 
 import android.content.Context;
 import android.graphics.Bitmap;

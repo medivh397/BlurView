@@ -1,4 +1,4 @@
-package com.medivh.blurview;
+package com.medivh.blurview.core;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -34,6 +34,7 @@ public class DoubleCacheSurfaceRender extends SurfaceRender {
 
     private void init() {
         HandlerThread blurThread = new HandlerThread("BlurThread");
+        blurThread.setPriority(Thread.MAX_PRIORITY);
         blurThread.start();
 
         blurHandler = new Handler(blurThread.getLooper()) {
@@ -117,6 +118,9 @@ public class DoubleCacheSurfaceRender extends SurfaceRender {
 
                     if (canvas != null) {
                         canvas.drawBitmap(blurBackground, null, dst, paint);
+                        if(coverColor != 0){
+                            canvas.drawColor(coverColor);
+                        }
                     }
 
                     unlockCanvasAndPost(canvas);

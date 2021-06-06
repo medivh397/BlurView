@@ -1,4 +1,4 @@
-package com.medivh.blurview;
+package com.medivh.blurview.core;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -21,6 +21,8 @@ public abstract class SurfaceRender implements SurfaceHolder.Callback {
     Rect dst;
 
     SurfaceHolder holder;
+
+    int coverColor;
 
     abstract void drawFrame(SurfaceHolder holder);
 
@@ -70,6 +72,10 @@ public abstract class SurfaceRender implements SurfaceHolder.Callback {
             msg.obj = background;
             blurHandler.sendMessage(msg);
         }
+    }
+
+    public void setCoverColor(int color){
+        this.coverColor = color;
     }
 
     abstract void release();

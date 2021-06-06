@@ -1,4 +1,4 @@
-package com.medivh.blurview;
+package com.medivh.blurview.core;
 
 import android.app.Activity;
 import android.content.Context;
@@ -145,7 +145,7 @@ public class BlurLayout extends FrameLayout {
 
         }
 
-        Log.i("BlurLayout", (System.currentTimeMillis() - begin) + " draw activityBitmap");
+        Log.i("BlurLayout", (System.currentTimeMillis() - begin) + " prepared activityBitmap");
 
         int left = (int) ((getLeft() + getTranslationX()) * ACTIVITY_BITMAP_SCALE);
         int top = (int) ((getTop() + getTranslationY()) * ACTIVITY_BITMAP_SCALE);
@@ -161,7 +161,7 @@ public class BlurLayout extends FrameLayout {
 
         surfaceViewCanvas.drawBitmap(activityBitmap, src, dst, paint);
 
-        Log.i("BlurLayout", (System.currentTimeMillis() - begin) + " draw surfaceViewBitmap");
+        Log.i("BlurLayout", (System.currentTimeMillis() - begin) + " prepared surfaceViewBitmap");
 
         surfaceRender.updateBackground(surfaceViewBitmap);
     }
@@ -175,8 +175,6 @@ public class BlurLayout extends FrameLayout {
         }
     };
 
-    //todo resumeRender, pauseRender
-
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -186,5 +184,9 @@ public class BlurLayout extends FrameLayout {
         Log.i("BlurLayout", "onDetachedFromWindow");
     }
 
-
+    public void setCoverColor(int color){
+        if(surfaceRender != null){
+            surfaceRender.setCoverColor(color);
+        }
+    }
 }
