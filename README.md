@@ -12,6 +12,14 @@ https://github.com/medivh397/BlurView/blob/main/demo1.mp4
 </center>
 
 ## How to use
-...
+```xml
+  <com.medivh.blurview.core.BlurLayout
+        android:id="@+id/blurLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
 
-
+        //put any view here,like LinearLaout, TextView, ImageView and so on.
+        
+  </com.medivh.blurview.core.BlurLayout>
+```
