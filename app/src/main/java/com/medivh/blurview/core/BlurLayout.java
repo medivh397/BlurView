@@ -5,8 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -19,24 +17,18 @@ import androidx.annotation.Nullable;
 
 public class BlurLayout extends FrameLayout {
 
-    public final static float ACTIVITY_BITMAP_SCALE = 0.2f;
     public final static float SURFACE_VIEW_BITMAP_SCALE = 0.4f;
-    public final static float BLUR_RADIUS = 10f;
+    public final static float BLUR_RADIUS = 10;
 
     private View activityView;
 
     private SurfaceView surfaceView;
     private SurfaceRender surfaceRender;
 
-    private Bitmap activityBitmap;
     private Bitmap surfaceViewBitmap;
 
-    private Canvas activityCanvas = new Canvas();
-    private Canvas surfaceViewCanvas = new Canvas();
-    private Paint paint = new Paint();
-
-    private Rect src;
-    private Rect dst;
+    private final Canvas surfaceViewCanvas = new Canvas();
+    private final Matrix surfaceMatrix = new Matrix();
 
     private boolean canvasDrawLock;
     private boolean preDrawLock;
@@ -87,38 +79,22 @@ public class BlurLayout extends FrameLayout {
     @Override
     protected void dispatchDraw(Canvas c) {
         if (canvasDrawLock) {
-//            Log.i("BlurLayout", "drawLock return");
             return;
         }
         updateBackground();
         super.dispatchDraw(c);
     }
 
+
+
     private void updateBackground() {
 
         long begin = System.currentTimeMillis();
-        int activityWidth = activityView.getWidth();
-        int activityHeight = activityView.getHeight();
         int surfaceWidth = surfaceView.getWidth();
         int surfaceHeight = surfaceView.getHeight();
 
         if (surfaceWidth == 0 || surfaceHeight == 0) {
             return;
-        }
-
-        int scaledActivityWidth = (int) (activityWidth * ACTIVITY_BITMAP_SCALE);
-        int scaledActivityHeight = (int) (activityHeight * ACTIVITY_BITMAP_SCALE);
-
-        if (activityBitmap == null || scaledActivityWidth != activityBitmap.getWidth()
-                || scaledActivityHeight != activityBitmap.getHeight()) {
-            activityBitmap = Bitmap.createBitmap(scaledActivityWidth, scaledActivityHeight, Bitmap.Config.RGB_565);
-            activityCanvas.setBitmap(activityBitmap);
-
-            Matrix matrix = new Matrix();
-            matrix.reset();
-            matrix.preScale(ACTIVITY_BITMAP_SCALE, ACTIVITY_BITMAP_SCALE);
-            matrix.postTranslate(0, 0);
-            activityCanvas.setMatrix(matrix);
         }
 
         int scaledSurfaceWidth = (int) (surfaceWidth * SURFACE_VIEW_BITMAP_SCALE);
@@ -128,12 +104,18 @@ public class BlurLayout extends FrameLayout {
                 || scaledSurfaceHeight != surfaceViewBitmap.getHeight()) {
             surfaceViewBitmap = Bitmap.createBitmap(scaledSurfaceWidth, scaledSurfaceHeight, Bitmap.Config.ARGB_8888);
             surfaceViewCanvas.setBitmap(surfaceViewBitmap);
+
         }
 
         if (!canvasDrawLock) {
             canvasDrawLock = true;
+            surfaceMatrix.reset();
+            surfaceMatrix.preScale(SURFACE_VIEW_BITMAP_SCALE, SURFACE_VIEW_BITMAP_SCALE);
+            surfaceMatrix.postTranslate(0, -(getTop() + getTranslationY()) * SURFACE_VIEW_BITMAP_SCALE);
+            surfaceViewCanvas.setMatrix(surfaceMatrix);
+
             setAlpha(0f);
-            activityView.draw(activityCanvas);
+            activityView.draw(surfaceViewCanvas);
             setAlpha(1);
             canvasDrawLock = false;
 
@@ -144,22 +126,6 @@ public class BlurLayout extends FrameLayout {
             }
 
         }
-
-        Log.i("BlurLayout", (System.currentTimeMillis() - begin) + " prepared activityBitmap");
-
-        int left = (int) ((getLeft() + getTranslationX()) * ACTIVITY_BITMAP_SCALE);
-        int top = (int) ((getTop() + getTranslationY()) * ACTIVITY_BITMAP_SCALE);
-        int right = (int) ((getRight() + getTranslationX()) * ACTIVITY_BITMAP_SCALE);
-        int bottom = (int) ((getBottom() + getTranslationY()) * ACTIVITY_BITMAP_SCALE);
-        if (src == null || dst == null) {
-            src = new Rect(left, top, right, bottom);
-            dst = new Rect(0, 0, (int) (surfaceWidth * SURFACE_VIEW_BITMAP_SCALE), (int) (surfaceHeight * SURFACE_VIEW_BITMAP_SCALE));
-        } else {
-            src.set(left, top, right, bottom);
-            dst.set(0, 0, scaledSurfaceWidth, scaledSurfaceHeight);
-        }
-
-        surfaceViewCanvas.drawBitmap(activityBitmap, src, dst, paint);
 
         Log.i("BlurLayout", (System.currentTimeMillis() - begin) + " prepared surfaceViewBitmap");
 
@@ -184,8 +150,8 @@ public class BlurLayout extends FrameLayout {
         Log.i("BlurLayout", "onDetachedFromWindow");
     }
 
-    public void setCoverColor(int color){
-        if(surfaceRender != null){
+    public void setCoverColor(int color) {
+        if (surfaceRender != null) {
             surfaceRender.setCoverColor(color);
         }
     }
