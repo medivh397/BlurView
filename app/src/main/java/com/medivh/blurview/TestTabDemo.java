@@ -23,7 +23,7 @@ public class TestTabDemo extends AppCompatActivity {
         blurLayout.setCoverColor(Color.parseColor("#ddffffff"));
 
         recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setAdapter(new RVAdapter(R.layout.list_item2));
+        recyclerView.setAdapter(new SimpleAdapter(R.layout.list_item2));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
     }
 

@@ -3,7 +3,10 @@ package com.medivh.blurview.core;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
@@ -116,6 +119,7 @@ public class DoubleCacheSurfaceRender extends SurfaceRender {
                     Canvas canvas = lockCanvas();
 
                     if (canvas != null) {
+                        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                         canvas.drawBitmap(blurBackground, null, dst, paint);
                         if(coverColor != 0){
                             canvas.drawColor(coverColor);

@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         blurLayout = findViewById(R.id.blurLayout);
 
         recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setAdapter(new RVAdapter(R.layout.list_item));
+        recyclerView.setAdapter(new SimpleAdapter(R.layout.list_item));
     }
 
 

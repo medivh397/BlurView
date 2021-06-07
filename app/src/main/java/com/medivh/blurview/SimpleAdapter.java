@@ -8,10 +8,10 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-class RVAdapter extends RecyclerView.Adapter<RVAdapter.Holder> {
+class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.Holder> {
 
     int itemLayoutId;
-    public RVAdapter(int itemLayoutId){
+    public SimpleAdapter(int itemLayoutId){
         this.itemLayoutId = itemLayoutId;
     }
 

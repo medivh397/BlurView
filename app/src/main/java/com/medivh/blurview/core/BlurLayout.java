@@ -34,7 +34,6 @@ public class BlurLayout extends FrameLayout {
 
     private boolean canvasDrawLock;
     private boolean preDrawLock;
-    private boolean isPauseBlurRunnablePost;
 
     public BlurLayout(@NonNull Context context) {
         this(context, null);
@@ -117,16 +116,9 @@ public class BlurLayout extends FrameLayout {
             surfaceViewCanvas.setMatrix(surfaceMatrix);
             surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
-            setAlpha(0f);
             activityView.draw(surfaceViewCanvas);
-            setAlpha(1);
             canvasDrawLock = false;
 
-            if (!isPauseBlurRunnablePost) {
-                isPauseBlurRunnablePost = true;
-                //暂停surfaceView的更新
-                getHandler().postDelayed(pauseBlurRunnable, 300);
-            }
 
         }
 
@@ -135,14 +127,6 @@ public class BlurLayout extends FrameLayout {
         surfaceRender.updateBackground(surfaceViewBitmap);
     }
 
-    private Runnable pauseBlurRunnable = new Runnable() {
-        @Override
-        public void run() {
-            preDrawLock = true;
-            isPauseBlurRunnablePost = false;
-            Log.i("BlurLayout", "pauseBlur");
-        }
-    };
 
     @Override
     protected void onDetachedFromWindow() {
