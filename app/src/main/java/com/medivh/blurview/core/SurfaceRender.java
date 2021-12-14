@@ -54,16 +54,16 @@ public abstract class SurfaceRender implements SurfaceHolder.Callback {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             canvas = holder.lockHardwareCanvas();
-        }else{
+        } else {
             canvas = holder.lockCanvas();
         }
         return canvas;
     }
 
     void unlockCanvasAndPost(Canvas canvas) {
-        try{
+        try {
             holder.unlockCanvasAndPost(canvas);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -76,7 +76,7 @@ public abstract class SurfaceRender implements SurfaceHolder.Callback {
         }
     }
 
-    public void setCoverColor(int color){
+    public void setCoverColor(int color) {
         this.coverColor = color;
     }
 

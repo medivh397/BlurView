@@ -23,7 +23,6 @@ public class BlurLayout extends FrameLayout {
     public final static float BLUR_RADIUS = 10;
 
     private View activityView;
-
     private SurfaceView surfaceView;
     private SurfaceRender surfaceRender;
 
@@ -50,9 +49,7 @@ public class BlurLayout extends FrameLayout {
 
     private void init(Context context) {
         FrameLayout decorView = (FrameLayout) ((Activity) context).getWindow().getDecorView();
-
         activityView = decorView.findViewById(android.R.id.content);
-
         surfaceView = new SurfaceView(context);
         surfaceRender = new DoubleCacheSurfaceRender(context);
         surfaceView.getHolder().addCallback(surfaceRender);
@@ -88,7 +85,6 @@ public class BlurLayout extends FrameLayout {
 
 
     private void prepareBitmapAndPost() {
-
         long begin = System.currentTimeMillis();
         int surfaceWidth = surfaceView.getWidth();
         int surfaceHeight = surfaceView.getHeight();
@@ -118,15 +114,11 @@ public class BlurLayout extends FrameLayout {
 
             activityView.draw(surfaceViewCanvas);
             canvasDrawLock = false;
-
-
         }
 
         Log.i("BlurLayout", (System.currentTimeMillis() - begin) + " prepared surfaceViewBitmap");
-
         surfaceRender.updateBackground(surfaceViewBitmap);
     }
-
 
     @Override
     protected void onDetachedFromWindow() {
@@ -134,7 +126,7 @@ public class BlurLayout extends FrameLayout {
         if (surfaceRender != null) {
             surfaceRender.release();
         }
-        if(preDrawListener != null){
+        if (preDrawListener != null) {
             getViewTreeObserver().removeOnPreDrawListener(preDrawListener);
         }
         Log.i("BlurLayout", "onDetachedFromWindow");

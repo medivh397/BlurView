@@ -19,7 +19,7 @@ public class SimpleSurfaceRender extends SurfaceRender {
         this.context = context;
     }
 
-    public void drawFrame(final SurfaceHolder holder){
+    public void drawFrame(final SurfaceHolder holder) {
         final Paint paint = new Paint();
 
         HandlerThread thread = new HandlerThread("BlurThread");
@@ -69,7 +69,7 @@ public class SimpleSurfaceRender extends SurfaceRender {
 
     @Override
     void release() {
-        if(blurHandler != null){
+        if (blurHandler != null) {
             blurHandler.getLooper().quit();
         }
     }

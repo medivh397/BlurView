@@ -1,9 +1,7 @@
 # BlurView
 
-A very fast and dynamic blur layout for Android
+A very fast and easy-to-use dynamic blur view for Android
 
-Here is the demo video:
-https://github.com/medivh397/BlurView/blob/main/demo1.mp4
 <br/><br/>
 <center class = "half">
  
@@ -12,7 +10,7 @@ https://github.com/medivh397/BlurView/blob/main/demo1.mp4
 </center>
 
 ## How to use
-All you need to do is put the BlurLayout into your layout files. BlurLayout is a view container, just like a FrameLayout...
+BlurView can be used as a regular FrameLayout. It blurs its underlying content and draws it as a background.
 
 ```xml
   <com.medivh.blurview.core.BlurLayout
@@ -20,7 +18,10 @@ All you need to do is put the BlurLayout into your layout files. BlurLayout is a
         android:layout_height="wrap_content"
         >
 
-        //put any view here if you need, like LinearLaout, TextView, ImageView and so on.
+        //put any view here if you need,such as LinearLayout,TextView,ImageView,etc.
         
   </com.medivh.blurview.core.BlurLayout>
 ```
+
+## How about the performance?
+Because of the high optimized implementation,BlurView can be very fast even on some low performance devices.

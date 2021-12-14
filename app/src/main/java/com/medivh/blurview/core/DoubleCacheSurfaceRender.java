@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -121,7 +120,7 @@ public class DoubleCacheSurfaceRender extends SurfaceRender {
                     if (canvas != null) {
                         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                         canvas.drawBitmap(blurBackground, null, dst, paint);
-                        if(coverColor != 0){
+                        if (coverColor != 0) {
                             canvas.drawColor(coverColor);
                         }
                     }
